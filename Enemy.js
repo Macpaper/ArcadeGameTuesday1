@@ -8,6 +8,7 @@ export default class Enemy {
         this.color = "red";
         this.dx = Math.random() * 20 - 10; // random [-10, 10]
         this.dy = Math.random() * 20 - 10; // 
+        this.dead = false;
     }
     update() {
         this.x += this.dx;

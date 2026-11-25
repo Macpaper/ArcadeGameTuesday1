@@ -7,6 +7,9 @@ export default class Player {
         this.y = 400;
         this.width = 50;
         this.height = 50;
+
+        this.mouseX = 0;
+        this.mouseY = 0;
         this.keyMap = new Map();
 
         this.bullet_timer = Date.now(); // 1713812387150102
@@ -28,7 +31,7 @@ export default class Player {
         }
         if (this.keyMap.get(' ')) {
             if (Date.now() - this.bullet_timer > 100) {
-                let bullet = new Bullet(this.game, this.x, this.y);
+                let bullet = new Bullet(this.game, this.x, this.y, this.mouseX, this.mouseY);
                 // get reference to game, add bullet object to bullet_list 
                 this.game.bullet_list.push(bullet);
                 this.bullet_timer = Date.now();
@@ -60,6 +63,10 @@ export default class Player {
         });
         document.addEventListener("keyup", function(e) {
             p.keyMap.set(e.key.toLowerCase(), false);
+        });
+        document.addEventListener("mousemove", function(e) {
+            p.mouseX = e.clientX;
+            p.mouseY = e.clientY;
         });
     }
 }

@@ -14,6 +14,14 @@ export default class Game {
     }
     // logical updates - movement, interactions, etc
     update() {
+        let temp_enemy_list = [];
+        for (let e of this.enemy_list) {
+            if (!e.dead) {
+                temp_enemy_list.push(e);
+            }
+        }
+        this.enemy_list = temp_enemy_list;
+
         this.player1.update();
         // update all enemies here
         for (let i = 0; i < this.enemy_list.length; i++) {
@@ -21,6 +29,15 @@ export default class Game {
         }
         for (let i = 0; i < this.bullet_list.length; i++) {
             this.bullet_list[i].update();
+        }
+
+        // Collision between Enemy and Bullet
+        for (let e of this.enemy_list) {
+            for (let b of this.bullet_list) {
+                if (this.circleRect(b.x, b.y, b.radius, e.x, e.y, e.width, e.height)) {
+                    e.dead = true;
+                }
+            }
         }
     }
     // anything related to graphics/drawing
@@ -38,8 +55,25 @@ export default class Game {
         }
 
     }
+    // Return true if collision. False if none.
+    circleRect(cx, cy, radius, rx, ry, rw, rh) {
+        let testX = cx;
+        let testY = cy;
+
+        if (cx < rx) testX = rx;
+        else if (cx > rx + rw) testX = rx + rw;
+        if (cy < ry) testY = ry;
+        else if (cy > ry + rh) testY = ry + rh;
+
+        let distX = cx - testX;
+        let distY = cy - testY;
+
+        let distance = Math.sqrt((distX * distX) + (distY * distY))
+
+        return distance <= radius;
+    }
     spawnWave() {
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 10; i++) {
             let xr = Math.random() * 500;
             let yr = Math.random() * 500;
             let e1 = new Enemy(this, xr, yr);
